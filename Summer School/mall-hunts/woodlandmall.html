@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Woodland Mall Explorer Hunt</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+      --danger: #b91c1c;
+      --success: #166534;
+      --gold-bg: #fef3c7;
+      --silver-bg: #f3f4f6;
+      --bronze-bg: #ffedd5;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+.direction-button {
+  display: block;
+  min-height: 46px;
+  border-radius: 12px;
+  background: #2563eb;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 10px 12px;
+  text-align: center;
+  text-decoration: none;
+}
+
+    header {
+      background: var(--card);
+      padding: 18px 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.45rem;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .card, .top-controls, .student-info, .level-card, .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    .top-controls {
+      display: grid;
+      gap: 10px;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    button, .back-link {
+      min-height: 46px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 10px 12px;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+
+    button.secondary, .back-link.secondary {
+      background: #374151;
+    }
+
+    button.danger {
+      background: var(--danger);
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin: 12px 0 5px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      margin: 0 0 8px;
+    }
+
+    .level-card.scout { background: var(--bronze-bg); }
+    .level-card.explorer { background: var(--silver-bg); }
+    .level-card.adventuerer { background: var(--gold-bg); }
+
+    .level-card h2 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+    }
+
+    .level-card p, .card p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .task {
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .task-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .task-label input {
+      width: 24px;
+      min-height: 24px;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    .response-box {
+      margin-top: 8px;
+      padding-left: 34px;
+    }
+
+    .response-box label {
+      margin-top: 0;
+      font-weight: normal;
+      color: var(--muted);
+    }
+
+    .summary-card {
+      border: 2px solid var(--accent);
+    }
+
+    .summary-line {
+      font-size: 1.15rem;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+
+    .earned {
+      color: var(--success);
+      font-size: 1.25rem;
+    }
+
+    .completion-grid {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .completion-grid label {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      margin: 0;
+      background: white;
+    }
+
+    .completion-grid input {
+      width: 24px;
+      min-height: 24px;
+    }
+
+
+    .complete-button {
+      background: var(--success);
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 100;
+      padding: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .celebration-modal {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+      border: 3px solid var(--accent);
+    }
+
+    .celebration-modal h2 {
+      margin: 0 0 10px;
+      font-size: 1.8rem;
+    }
+
+    .celebration-modal p {
+      font-size: 1.1rem;
+      color: var(--text);
+      margin: 8px 0;
+    }
+
+    .celebration-level {
+      font-size: 1.35rem;
+      font-weight: bold;
+      color: var(--success);
+      margin: 14px 0;
+    }
+
+    .modal-actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    footer {
+      padding: 24px 16px 48px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media print {
+      header, .top-controls, footer, .back-link { display: none; }
+      body { background: white; }
+      main { max-width: none; padding: 0; }
+      .card, .student-info, .level-card, .summary-card { box-shadow: none; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Woodland Mall Explorer Hunt</h1>
+    <p class="subtitle">A kid-friendly community navigation, safety, and discovery activity.</p>
+  </header>
+
+<section class="card">
+    <h2 class="section-title">Location Information</h2>
+
+    <p>
+      Woodland Mall<br>
+      3195 28th St SE<br>
+      Grand Rapids, MI 49512
+    </p>
+
+    <a class="direction-button"
+       href="https://www.google.com/maps/search/?api=1&query=3195+28th+St+SE+GrandRapids+MI+49512"
+       target="_blank">
+       Directions
+    </a>
+</section>
+
+  <main>
+    <section class="top-controls">
+      <div class="button-row">
+        <button onclick="saveForm()">Save Progress</button>
+        <button class="complete-button" onclick="completeHunt()">Complete Hunt</button>
+      </div>
+      <div class="button-row">
+        <button class="secondary" onclick="window.print()">Print / PDF</button>
+        <button class="danger" onclick="clearForm()">Clear This Device</button>
+      </div>
+      <a class="back-link secondary" href="mallhunts.html">Back to Mall Hunts</a>
+    </section>
+
+    <section class="student-info">
+      <h2 class="section-title">Group Info</h2>
+
+      <label for="groupName">Group / Student Name</label>
+      <input id="groupName" name="groupName" type="text" placeholder="Example: Group 1 or Student initials" />
+
+      <label for="date">Date</label>
+      <input id="date" name="date" type="date" />
+
+      <label for="staff">Staff Initials</label>
+      <input id="staff" name="staff" type="text" />
+
+      <label for="goal">Choose Your Goal</label>
+      <select id="goal" name="goal">
+        <option value="">Choose one</option>
+        <option value="Scout">Scout - 5 items</option>
+        <option value="Explorer">Explorer - 10 items</option>
+        <option value="Adventurer">Adventurer - 15 items</option>
+      </select>
+    </section>
+
+    <section class="summary-card">
+      <h2 class="section-title">Explorer Progress</h2>
+      <div class="summary-line">Items Completed: <span id="completedCount">0</span></div>
+      <div class="summary-line earned">Current Level Earned: <span id="earnedLevel">Keep exploring!</span></div>
+    </section>
+
+    <section class="level-card scout">
+      <h2>🥉 Scout</h2>
+      <p>Complete any 5 items.</p>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="bench" onchange="updateProgress()"> Find a bench</label>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="blue" onchange="updateProgress()"> Find something blue</label>
+        <div class="response-box">
+          <label>What did you find?</label>
+          <input name="blueFound" type="text" placeholder="Example: blue stuffed animal" />
+        </div>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="shoeStore" onchange="updateProgress()"> Find a shoe store</label>
+        <div class="response-box">
+          <label>Which store?</label>
+          <input name="shoeStoreFound" type="text" placeholder="Example: Foot Locker" />
+        </div>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="restroomSign" onchange="updateProgress()"> Find a restroom sign</label>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="like" onchange="updateProgress()"> Find something you like</label>
+        <div class="response-box">
+          <label>What did you find?</label>
+          <input name="likeFound" type="text" placeholder="Example: pretzel store" />
+        </div>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="waveWorker" onchange="updateProgress()"> Wave to a worker</label>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="foodPlace" onchange="updateProgress()"> Find a food place</label>
+        <div class="response-box">
+          <label>Which food place?</label>
+          <input name="foodPlaceFound" type="text" placeholder="Example: Auntie Anne's" />
+        </div>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="mallMap" onchange="updateProgress()"> Find a mall map or directory</label>
+      </div>
+    </section>
+
+    <section class="level-card explorer">
+      <h2>🥈 Explorer</h2>
+      <p>Complete any 10 items total.</p>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="exitSign" onchange="updateProgress()"> Find an exit sign</label>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="shiny" onchange="updateProgress()"> Find something shiny</label>
+        <div class="response-box">
+          <label>What did you find?</label>
+          <input name="shinyFound" type="text" placeholder="Example: jewelry display" />
+        </div>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="nameTag" onchange="updateProgress()"> Find a person wearing a name tag</label>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="thankYou" onchange="updateProgress()"> Say thank you</label>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="quietPlace" onchange="updateProgress()"> Find a quiet place to relax</label>
+        <div class="response-box">
+          <label>Where was it?</label>
+          <input name="quietPlaceFound" type="text" placeholder="Example: bench near hallway" />
+        </div>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="security" onchange="updateProgress()"> Find a security officer</label>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="soft" onchange="updateProgress()"> Find something soft</label>
+        <div class="response-box">
+          <label>What did you find?</label>
+          <input name="softFound" type="text" placeholder="Example: hoodie" />
+        </div>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="musicStore" onchange="updateProgress()"> Find a store with music playing</label>
+        <div class="response-box">
+          <label>Which store?</label>
+          <input name="musicStoreFound" type="text" placeholder="Example: clothing store" />
+        </div>
+      </div>
+    </section>
+
+    <section class="level-card adventurer">
+      <h2>🥇 Adventurer</h2>
+      <p>Complete any 15 items total.</p>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="showExit" onchange="updateProgress()"> Show staff the nearest exit</label>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="showRestroom" onchange="updateProgress()"> Show staff the nearest restroom</label>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="twoFoods" onchange="updateProgress()"> Find two different food locations</label>
+        <div class="response-box">
+          <label>Which two?</label>
+          <input name="twoFoodsFound" type="text" placeholder="Example: pizza and pretzels" />
+        </div>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="toyGame" onchange="updateProgress()"> Find a toy or game store</label>
+        <div class="response-box">
+          <label>Which store?</label>
+          <input name="toyGameFound" type="text" placeholder="Example: toy store or game store" />
+        </div>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="newStore" onchange="updateProgress()"> Find a store you have never visited</label>
+        <div class="response-box">
+          <label>Which store?</label>
+          <input name="newStoreFound" type="text" placeholder="Example: store name" />
+        </div>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="stayGroup" onchange="updateProgress()"> Stay with your group during the activity</label>
+      </div>
+
+      <div class="task">
+        <label class="task-label"><input type="checkbox" name="helpFriend" onchange="updateProgress()"> Help another student complete an item</label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">Finish Line</h2>
+
+      <label for="favorite">Today's Favorite Discovery</label>
+      <input id="favorite" name="favorite" type="text" placeholder="Example: blue dinosaur, pretzel store, escalator" />
+
+      <div class="completion-grid">
+        <label><input type="checkbox" name="best"> I did my best</label>
+        <label><input type="checkbox" name="ownWay"> I found things in my own way</label>
+        <label><input type="checkbox" name="scoutDone"> I completed Scout</label>
+        <label><input type="checkbox" name="explorerDone"> I completed Explorer</label>
+        <label><input type="checkbox" name="adventurerDone"> I completed Adventurer</label>
+      </div>
+
+      <label for="notes">Staff Notes</label>
+      <textarea id="notes" name="notes" placeholder="Prompting needed, communication observed, safety skills, regulation, peer interaction, etc."></textarea>
+    </section>
+  </main>
+
+
+  <div id="celebrationModal" class="modal-overlay">
+    <div class="celebration-modal">
+      <h2>🎉 CONGRATULATIONS! 🎉</h2>
+      <p>You achieved</p>
+      <div id="modalLevel" class="celebration-level">Mall Hunt Explorer</div>
+      <p>for completing <span id="modalCount">0</span> tasks.</p>
+      <div class="modal-actions">
+        <button onclick="closeCelebration()">Keep Exploring</button>
+        <button class="secondary" onclick="window.print()">Print / PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Progress saves only on this device/browser.
+  </footer>
+
+  <script>
+    function getCompletedCount() {
+      const taskCheckboxes = document.querySelectorAll('.task input[type="checkbox"]');
+      let count = 0;
+
+      taskCheckboxes.forEach(box => {
+        if (box.checked) count++;
+      });
+
+      return count;
+    }
+
+    function getEarnedLevel(count) {
+  if (count >= 15) return "🏆 Mall Hunt Trailblazer";
+  if (count >= 10) return "🌳 Mall Hunt Adventurer";
+  if (count >= 6) return "🌿 Mall Hunt Explorer";
+  if (count >= 1) return "🌱 Mall Hunt Scout";
+  return "Keep Exploring!";
+}
+
+    function updateProgress() {
+      const count = getCompletedCount();
+      const level = getEarnedLevel(count);
+
+      document.getElementById('completedCount').textContent = count;
+      document.getElementById('earnedLevel').textContent = level;
+    }
+
+    function completeHunt() {
+      const count = getCompletedCount();
+      const level = getEarnedLevel(count);
+
+      saveForm(false);
+
+      document.getElementById('modalCount').textContent = count;
+      document.getElementById('modalLevel').textContent = level === "Keep exploring!" ? "Mall Hunt Explorer" : level;
+      document.getElementById('celebrationModal').classList.add('show');
+    }
+
+    function closeCelebration() {
+      document.getElementById('celebrationModal').classList.remove('show');
+    }
+
+    function getFormData() {
+      const data = {};
+      document.querySelectorAll("input, textarea, select").forEach(field => {
+        const key = field.name || field.id;
+        if (!key) return;
+
+        if (field.type === "checkbox") {
+          data[key] = field.checked;
+        } else {
+          data[key] = field.value;
+        }
+      });
+      return data;
+    }
+
+    function setFormData(data) {
+      document.querySelectorAll("input, textarea, select").forEach(field => {
+        const key = field.name || field.id;
+        if (!key) return;
+
+        if (field.type === "checkbox") {
+          field.checked = !!data[key];
+        } else if (data[key] !== undefined) {
+          field.value = data[key];
+        }
+      });
+      updateProgress();
+    }
+
+    function saveForm(showAlert = true) {
+      localStorage.setItem("woodlandMallExplorerData", JSON.stringify(getFormData()));
+      if (showAlert) alert("Progress saved on this device.");
+    }
+
+    function clearForm() {
+      if (!confirm("Clear all entries saved on this device?")) return;
+
+      localStorage.removeItem("woodlandMallExplorerData");
+
+      document.querySelectorAll("input, textarea, select").forEach(field => {
+        if (field.type === "checkbox") field.checked = false;
+        else field.value = "";
+      });
+
+      updateProgress();
+    }
+
+    const saved = localStorage.getItem("woodlandMallExplorerData");
+    if (saved) setFormData(JSON.parse(saved));
+
+    updateProgress();
+  </script>
+</body>
+</html>

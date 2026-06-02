@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Summer School Activities</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    header {
+      background: var(--card);
+      padding: 22px 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.45rem;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .notice,
+    .activity-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    .notice h2,
+    .activity-card h2 {
+      margin: 0 0 6px;
+      font-size: 1.2rem;
+    }
+
+    .notice p,
+    .activity-card p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .button-link {
+      display: block;
+      width: 100%;
+      min-height: 50px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.05rem;
+    }
+
+    .button-link:hover,
+    .button-link:focus {
+      background: var(--accent-dark);
+    }
+
+    .disabled {
+      background: #9ca3af;
+      pointer-events: none;
+    }
+
+    .small-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    footer {
+      padding: 24px 16px 48px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Summer School Activities</h1>
+    <p class="subtitle">Staff mobile hub for community-based activities and student learning tasks.</p>
+  </header>
+
+  <main>
+    <section class="notice">
+      <h2>Choose an activity</h2>
+      <p>Select the activity your group is completing today. New activities can be added here without changing the QR code.</p>
+    </section>
+
+<section class="activity-card">
+  <h2>Daily Schedule</h2>
+  <p>View today's summer school schedule.</p>
+  <a class="button-link" href="schedule.html">Open Schedule</a>
+</section>
+
+    <section class="activity-card">
+      <h2>Grocery Scavenger Hunt</h2>
+      <p>Use this during grocery store trips to record brands, prices, totals, completion, and reflection notes.</p>
+      <a class="button-link" href="grocery.html">Open Grocery Activity</a>
+    </section>
+
+<section class="activity-card">
+  <h2>Mall Hunts</h2>
+  <p>Community navigation, safety awareness, observation skills, and positive social interaction.</p>
+  <a class="button-link" href="mallhunts.html">Open Mall Hunts</a>
+</section>
+
+<section class="activity-card">
+  <h2>Nature Walks</h2>
+  <p>
+    Explore local parks, trails, and nature preserves while practicing
+    observation skills, physical activity, safety awareness, and community
+    participation.
+  </p>
+  <a class="button-link" href="naturewalks.html">Open Nature Walks</a>
+</section>
+
+    <section class="activity-card">
+      <h2>Mileage Club</h2>
+      <p>Track walking, movement, participation, and Feet Medallion progress.</p>
+      <a class="button-link disabled" href="#">Coming Soon</a>
+    </section>
+
+    <section class="activity-card">
+      <h2>Community Walk Reflection</h2>
+      <p>Use after mall walks, city walks, park walks, or other off-grounds community trips.</p>
+      <a class="button-link disabled" href="#">Coming Soon</a>
+    </section>
+
+    <section class="activity-card">
+      <h2>Staff Resources</h2>
+      <p>Schedules, expectations, safety reminders, frontloading prompts, and debrief questions.</p>
+      <a class="button-link disabled" href="#">Coming Soon</a>
+    </section>
+
+    <p class="small-note">Tip: keep this file named <strong>index.html</strong>. This is the page your QR code should open.</p>
+  </main>
+
+  <footer>
+    Summer School Community-Based Programming
+  </footer>
+</body>
+</html>

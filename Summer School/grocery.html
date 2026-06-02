@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grocery Scavenger Hunt</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --accent: #2563eb;
+      --danger: #b91c1c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    header {
+      background: var(--card);
+      padding: 18px 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.4rem;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .top-controls,
+    .student-info,
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    .top-controls {
+      display: grid;
+      gap: 10px;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    button {
+      min-height: 46px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 10px 12px;
+    }
+
+    button.secondary {
+      background: #374151;
+    }
+
+    button.danger {
+      background: var(--danger);
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin: 12px 0 5px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      margin: 0 0 8px;
+    }
+
+    .item-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .item-name {
+      font-weight: bold;
+      font-size: 1.05rem;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .found-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .found-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      min-height: 46px;
+    }
+
+    .found-option input {
+      width: 22px;
+      min-height: 22px;
+    }
+
+    .total-display {
+      margin-top: 12px;
+      padding: 12px;
+      background: #eef2ff;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .add-on-title {
+      margin-top: 14px;
+      font-weight: bold;
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 24px 16px 48px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (min-width: 620px) {
+      .item-row {
+        grid-template-columns: 1.2fr 1.8fr;
+        align-items: start;
+      }
+    }
+
+    @media print {
+      header, .top-controls, footer { display: none; }
+      body { background: white; }
+      main { max-width: none; padding: 0; }
+      .card, .student-info { box-shadow: none; page-break-inside: avoid; }
+      button { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Grocery Scavenger Hunt</h1>
+    <p class="subtitle">Mobile-friendly editable version for staff use in the community.</p>
+  </header>
+
+  <main>
+    <section class="top-controls">
+      <div class="button-row">
+        <button onclick="saveForm()">Save Progress</button>
+        <button class="secondary" onclick="window.print()">Print / PDF</button>
+      </div>
+      <button class="danger" onclick="clearForm()">Clear Form</button>
+    </section>
+
+    <section class="student-info">
+      <h2 class="section-title">Student / Group Info</h2>
+      <label for="studentName">Student or Group Name</label>
+      <input id="studentName" name="studentName" type="text" />
+
+      <label for="date">Date</label>
+      <input id="date" name="date" type="date" />
+
+      <label for="store">Store / Location</label>
+      <input id="store" name="store" type="text" />
+
+      <label for="staff">Staff Initials</label>
+      <input id="staff" name="staff" type="text" />
+    </section>
+
+    <div id="activityContainer"></div>
+  </main>
+
+  <footer>
+    Progress saves on this device/browser only unless submitted or exported by staff.
+  </footer>
+
+  <script>
+    const activities = [
+      {
+        title: "Sandwich Kit",
+        items: ["Bread", "Deli meat", "Cheese slices", "Lettuce", "Tomato", "Mustard or mayo"]
+      },
+      {
+        title: "Breakfast Basics",
+        items: ["Cereal", "Milk", "Bananas", "Yogurt", "Orange juice"]
+      },
+      {
+        title: "Snack Pack",
+        items: ["Crackers", "Cheese sticks", "Juice boxes", "Granola bars", "Applesauce"]
+      },
+      {
+        title: "Pasta Night",
+        items: ["Pasta", "Pasta sauce", "Parmesan cheese", "Garlic bread", "Frozen vegetables"]
+      },
+      {
+        title: "Taco Night",
+        items: ["Tortillas", "Ground meat or alternative", "Shredded cheese", "Taco seasoning", "Salsa", "Sour cream"]
+      },
+      {
+        title: "Cleaning Supplies",
+        items: ["Paper towels", "Dish soap", "Trash bags", "Cleaning spray", "Sponges"]
+      },
+      {
+        title: "Lunchbox Builder",
+        items: ["Lunch meat", "Bread or wraps", "Chips", "Fruit", "Juice or drink", "Snack item"]
+      },
+      {
+        title: "Frozen Meal Pick",
+        items: ["Frozen meal #1", "Frozen meal #2", "Frozen vegetable", "Ice cream or dessert"]
+      },
+      {
+        title: "Drink Station",
+        items: ["Bottled water", "Sports drink", "Soda", "Juice", "Coffee or tea"]
+      },
+      {
+        title: "Hygiene Essentials",
+        items: ["Shampoo", "Body wash or soap", "Toothpaste", "Toothbrush", "Deodorant", "Hand soap"]
+      }
+    ];
+
+    const container = document.getElementById("activityContainer");
+
+    function safeId(text) {
+      return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    }
+
+    function makeItem(sectionId, itemName, index) {
+      const id = `${sectionId}-item-${index}`;
+      return `
+        <div class="item-row">
+          <div class="item-name">${itemName}</div>
+          <div class="mini-grid">
+            <input name="${id}-brand" placeholder="Brand" aria-label="${itemName} brand" />
+            <input name="${id}-price" type="number" inputmode="decimal" step="0.01" min="0" placeholder="Price" aria-label="${itemName} price" oninput="updateTotals()" />
+          </div>
+        </div>
+      `;
+    }
+
+    function makeAddOn(sectionId, index) {
+      const id = `${sectionId}-addon-${index}`;
+      return `
+        <div class="item-row">
+          <input name="${id}-name" placeholder="Add-on item" aria-label="Add-on item name" />
+          <div class="mini-grid">
+            <input name="${id}-brand" placeholder="Brand" aria-label="Add-on brand" />
+            <input name="${id}-price" type="number" inputmode="decimal" step="0.01" min="0" placeholder="Price" aria-label="Add-on price" oninput="updateTotals()" />
+          </div>
+        </div>
+      `;
+    }
+
+    function renderActivities() {
+      container.innerHTML = activities.map((activity) => {
+        const sectionId = safeId(activity.title);
+        return `
+          <section class="card" data-section="${sectionId}">
+            <h2 class="section-title">${activity.title}</h2>
+            ${activity.items.map((item, index) => makeItem(sectionId, item, index)).join("")}
+
+            <div class="add-on-title">Add-Ons Optional</div>
+            ${[0,1,2].map((_, index) => makeAddOn(sectionId, index)).join("")}
+
+            <div class="total-display" id="${sectionId}-total">Total Cost: $0.00</div>
+
+            <label>Did I find all items?</label>
+            <div class="found-row">
+              <label class="found-option"><input type="radio" name="${sectionId}-found" value="yes" /> Yes</label>
+              <label class="found-option"><input type="radio" name="${sectionId}-found" value="no" /> No</label>
+            </div>
+
+            <label for="${sectionId}-notes">Notes / What was hard?</label>
+            <textarea id="${sectionId}-notes" name="${sectionId}-notes"></textarea>
+          </section>
+        `;
+      }).join("");
+    }
+
+    function updateTotals() {
+      activities.forEach(activity => {
+        const sectionId = safeId(activity.title);
+        const section = document.querySelector(`[data-section="${sectionId}"]`);
+        const prices = section.querySelectorAll('input[name$="-price"]');
+        let total = 0;
+        prices.forEach(input => {
+          const value = parseFloat(input.value);
+          if (!isNaN(value)) total += value;
+        });
+        document.getElementById(`${sectionId}-total`).textContent = `Total Cost: $${total.toFixed(2)}`;
+      });
+    }
+
+    function getFormData() {
+      const data = {};
+      document.querySelectorAll("input, textarea, select").forEach(field => {
+        if (field.type === "radio") {
+          if (field.checked) data[field.name] = field.value;
+        } else {
+          data[field.name || field.id] = field.value;
+        }
+      });
+      return data;
+    }
+
+    function setFormData(data) {
+      document.querySelectorAll("input, textarea, select").forEach(field => {
+        const key = field.name || field.id;
+        if (field.type === "radio") {
+          field.checked = data[key] === field.value;
+        } else if (data[key] !== undefined) {
+          field.value = data[key];
+        }
+      });
+      updateTotals();
+    }
+
+    function saveForm() {
+      localStorage.setItem("groceryScavengerHuntData", JSON.stringify(getFormData()));
+      alert("Progress saved on this device.");
+    }
+
+    function clearForm() {
+      if (!confirm("Clear all entries on this device?")) return;
+      localStorage.removeItem("groceryScavengerHuntData");
+      document.querySelectorAll("input, textarea").forEach(field => {
+        if (field.type === "radio") field.checked = false;
+        else field.value = "";
+      });
+      updateTotals();
+    }
+
+    renderActivities();
+
+    const saved = localStorage.getItem("groceryScavengerHuntData");
+    if (saved) setFormData(JSON.parse(saved));
+  </script>
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rivertown Mall Hunt</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --accent: #2563eb;
+      --danger: #b91c1c;
+      --success: #166534;
+      --scout-bg: #ecfdf5;
+      --explorer-bg: #eef2ff;
+      --adventurer-bg: #fef3c7;
+    }
+
+```
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.4;
+}
+
+header {
+  background: var(--card);
+  padding: 18px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+h1 {
+  margin: 0 0 6px;
+  font-size: 1.45rem;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.card, .top-controls, .student-info, .level-card, .summary-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.button-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+button, .back-link {
+  min-height: 46px;
+  border: none;
+  border-radius: 12px;
+  background: var(--accent);
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 10px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
+
+.complete-button { background: var(--success); }
+button.secondary { background: #374151; }
+button.danger, .back-link { background: var(--danger); }
+
+label {
+  display: block;
+  font-weight: bold;
+  margin: 12px 0 5px;
+}
+
+input, textarea, select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 1rem;
+  background: white;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  margin: 0 0 8px;
+}
+
+.level-card.scout { background: var(--scout-bg); }
+.level-card.explorer { background: var(--explorer-bg); }
+.level-card.adventurer { background: var(--adventurer-bg); }
+
+.task {
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.task-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.task-label input {
+  width: 24px;
+  min-height: 24px;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.response-box {
+  margin-top: 8px;
+  padding-left: 34px;
+}
+
+.mini-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.three-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.summary-card {
+  border: 2px solid var(--accent);
+}
+
+.summary-line {
+  font-size: 1.15rem;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.earned {
+  color: var(--success);
+  font-size: 1.25rem;
+}
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 100;
+  padding: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.celebration-modal {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border-radius: 18px;
+  padding: 22px;
+  text-align: center;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+  border: 3px solid var(--accent);
+}
+
+.celebration-modal h2 {
+  margin: 0 0 10px;
+  font-size: 1.8rem;
+}
+
+.celebration-level {
+  font-size: 1.35rem;
+  font-weight: bold;
+  color: var(--success);
+  margin: 14px 0;
+}
+
+.modal-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+footer {
+  padding: 24px 16px 48px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+```
+
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>Rivertown Mall Hunt</h1>
+  <p class="subtitle">Community navigation, money awareness, observation, and independence skills.</p>
+</header>
+
+<main>
+  <section class="top-controls">
+    <div class="button-row">
+      <button onclick="saveForm()">Save Progress</button>
+      <button class="complete-button" onclick="completeHunt()">Complete Hunt</button>
+    </div>
+    <div class="button-row">
+      <button class="secondary" onclick="window.print()">Print / PDF</button>
+      <button class="danger" onclick="clearForm()">Clear This Device</button>
+    </div>
+    <a class="back-link" href="../mallhunts.html">Back to Mall Hunts</a>
+  </section>
+
+  <section class="student-info">
+    <h2 class="section-title">Group Info</h2>
+
+```
+<label>Group / Student Name</label>
+<input name="groupName" type="text">
+
+<label>Date</label>
+<input name="date" type="date">
+
+<label>Staff Initials</label>
+<input name="staff" type="text">
+
+<label>Choose Your Goal</label>
+<select name="goal">
+  <option value="">Choose one</option>
+  <option value="scout">Scout - 1 to 5 tasks</option>
+  <option value="explorer">Explorer - 6 to 9 tasks</option>
+  <option value="adventurer">Adventurer - 10 to 14 tasks</option>
+  <option value="trailblazer">Trailblazer - 15+ tasks</option>
+</select>
+```
+
+  </section>
+
+  <section class="summary-card">
+    <h2 class="section-title">Progress</h2>
+    <div class="summary-line">Tasks Completed: <span id="completedCount">0</span></div>
+    <div class="summary-line earned">Current Achievement: <span id="earnedLevel">Keep Exploring!</span></div>
+  </section>
+
+  <section class="level-card scout">
+    <h2>🌱 Scout</h2>
+    <p>Complete 1–5 tasks.</p>
+
+```
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="shoeStore" onchange="updateProgress()"> Find a shoe store</label>
+  <div class="response-box"><label>Store Name</label><input name="shoeStoreName" type="text"></div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="foodLocation" onchange="updateProgress()"> Find a food location</label>
+  <div class="response-box"><label>Restaurant / Store Name</label><input name="foodLocationName" type="text"></div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="escalator" onchange="updateProgress()"> Find an escalator</label>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="elevator" onchange="updateProgress()"> Find an elevator</label>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="secondFloorStore" onchange="updateProgress()"> Find a store on the second floor</label>
+  <div class="response-box"><label>Store Name</label><input name="secondFloorStoreName" type="text"></div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="directory" onchange="updateProgress()"> Find a mall directory or map</label>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="seatingArea" onchange="updateProgress()"> Find a seating area</label>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="restroomSign" onchange="updateProgress()"> Find a restroom sign</label>
+</div>
+```
+
+  </section>
+
+  <section class="level-card explorer">
+    <h2>🌿 Explorer</h2>
+    <p>Complete 6–9 tasks.</p>
+
+```
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="shoesOver150" onchange="updateProgress()"> Find a pair of shoes over $150</label>
+  <div class="response-box mini-grid">
+    <div><label>Brand</label><input name="shoesBrand" type="text"></div>
+    <div><label>Price</label><input name="shoesPrice" type="text"></div>
+  </div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="shirtUnder25" onchange="updateProgress()"> Find a shirt under $25</label>
+  <div class="response-box mini-grid">
+    <div><label>Store</label><input name="shirtStore" type="text"></div>
+    <div><label>Price</label><input name="shirtPrice" type="text"></div>
+  </div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="saleSign" onchange="updateProgress()"> Find a sale sign</label>
+  <div class="response-box">
+    <label>Store</label><input name="saleStore" type="text">
+    <label>What is on sale?</label><input name="saleItem" type="text">
+  </div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="newStore" onchange="updateProgress()"> Find a store you have never visited before</label>
+  <div class="response-box"><label>Store Name</label><input name="newStoreName" type="text"></div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="shiny" onchange="updateProgress()"> Find something shiny</label>
+  <div class="response-box"><label>What did you find?</label><input name="shinyFound" type="text"></div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="musicStore" onchange="updateProgress()"> Find a store playing music</label>
+  <div class="response-box"><label>Store Name</label><input name="musicStoreName" type="text"></div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="similarStores" onchange="updateProgress()"> Find two stores that sell similar items</label>
+  <div class="response-box mini-grid">
+    <div><label>Store 1</label><input name="similarStore1" type="text"></div>
+    <div><label>Store 2</label><input name="similarStore2" type="text"></div>
+  </div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="foodUnder10" onchange="updateProgress()"> Find a food item under $10</label>
+  <div class="response-box">
+    <label>Restaurant / Store</label><input name="foodUnder10Store" type="text">
+    <label>Item</label><input name="foodUnder10Item" type="text">
+    <label>Price</label><input name="foodUnder10Price" type="text">
+  </div>
+</div>
+```
+
+  </section>
+
+  <section class="level-card adventurer">
+    <h2>🌳 Adventurer</h2>
+    <p>Complete 10–14 tasks.</p>
+
+```
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="twoWaysSecondFloor" onchange="updateProgress()"> Show staff two different ways to get to the second floor</label>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="nearestExit" onchange="updateProgress()"> Find the nearest exit from your current location</label>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="nearestRestroom" onchange="updateProgress()"> Find the nearest restroom without staff telling you where it is</label>
+  <div class="response-box"><label>Location / Nearby Store</label><input name="restroomLocation" type="text"></div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="compareShoes" onchange="updateProgress()"> Compare two pairs of shoes</label>
+  <div class="response-box">
+    <label>Brand 1</label><input name="compareShoeBrand1" type="text">
+    <label>Price 1</label><input name="compareShoePrice1" type="text">
+    <label>Brand 2</label><input name="compareShoeBrand2" type="text">
+    <label>Price 2</label><input name="compareShoePrice2" type="text">
+    <label>Which costs more?</label><input name="shoeCostsMore" type="text">
+  </div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="directoryStore" onchange="updateProgress()"> Find a store using the mall directory</label>
+  <div class="response-box"><label>Store Selected</label><input name="directoryStoreName" type="text"></div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="meetingPlace" onchange="updateProgress()"> Find a safe meeting place if the group gets separated</label>
+  <div class="response-box"><label>Location</label><input name="meetingPlaceLocation" type="text"></div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="threeFoodOptions" onchange="updateProgress()"> Find three different food options</label>
+  <div class="response-box">
+    <label>Option 1 Restaurant</label><input name="foodOption1Restaurant" type="text">
+    <label>Option 1 Item</label><input name="foodOption1Item" type="text">
+    <label>Option 1 Price</label><input name="foodOption1Price" type="text">
+
+    <label>Option 2 Restaurant</label><input name="foodOption2Restaurant" type="text">
+    <label>Option 2 Item</label><input name="foodOption2Item" type="text">
+    <label>Option 2 Price</label><input name="foodOption2Price" type="text">
+
+    <label>Option 3 Restaurant</label><input name="foodOption3Restaurant" type="text">
+    <label>Option 3 Item</label><input name="foodOption3Item" type="text">
+    <label>Option 3 Price</label><input name="foodOption3Price" type="text">
+  </div>
+</div>
+
+<div class="task">
+  <label class="task-label"><input type="checkbox" name="helpStudent" onchange="updateProgress()"> Help another student complete one task</label>
+  <div class="response-box"><label>What did you help with?</label><input name="helpStudentTask" type="text"></div>
+</div>
+```
+
+  </section>
+
+  <section class="card">
+    <h2 class="section-title">Finish Line</h2>
+
+```
+<label>Favorite discovery today</label>
+<input name="favoriteDiscovery" type="text">
+
+<label>One thing I did well</label>
+<input name="didWell" type="text">
+
+<label>Staff Notes</label>
+<textarea name="staffNotes" placeholder="Prompting needed, communication observed, navigation, safety skills, regulation, peer interaction, etc."></textarea>
+```
+
+  </section>
+</main>
+
+<div id="celebrationModal" class="modal-overlay">
+  <div class="celebration-modal">
+    <h2>🎉 CONGRATULATIONS! 🎉</h2>
+    <p>You achieved</p>
+    <div id="modalLevel" class="celebration-level">Keep Exploring!</div>
+    <p>for completing <span id="modalCount">0</span> tasks.</p>
+    <div class="modal-actions">
+      <button onclick="closeCelebration()">Keep Exploring</button>
+      <button class="secondary" onclick="window.print()">Print / PDF</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Progress saves only on this device/browser.
+</footer>
+
+<script>
+  function getCompletedCount() {
+    const taskCheckboxes = document.querySelectorAll('.task input[type="checkbox"]');
+    let count = 0;
+
+    taskCheckboxes.forEach(box => {
+      if (box.checked) count++;
+    });
+
+    return count;
+  }
+
+  function getEarnedLevel(count) {
+    if (count >= 15) return "🏆 Mall Hunt Trailblazer";
+    if (count >= 10) return "🌳 Mall Hunt Adventurer";
+    if (count >= 6) return "🌿 Mall Hunt Explorer";
+    if (count >= 1) return "🌱 Mall Hunt Scout";
+    return "Keep Exploring!";
+  }
+
+  function updateProgress() {
+    const count = getCompletedCount();
+    const level = getEarnedLevel(count);
+
+    document.getElementById('completedCount').textContent = count;
+    document.getElementById('earnedLevel').textContent = level;
+  }
+
+  function completeHunt() {
+    const count = getCompletedCount();
+    const level = getEarnedLevel(count);
+
+    saveForm(false);
+
+    document.getElementById('modalCount').textContent = count;
+    document.getElementById('modalLevel').textContent = level;
+    document.getElementById('celebrationModal').classList.add('show');
+  }
+
+  function closeCelebration() {
+    document.getElementById('celebrationModal').classList.remove('show');
+  }
+
+  function getFormData() {
+    const data = {};
+    document.querySelectorAll("input, textarea, select").forEach(field => {
+      const key = field.name || field.id;
+      if (!key) return;
+
+      if (field.type === "checkbox") {
+        data[key] = field.checked;
+      } else {
+        data[key] = field.value;
+      }
+    });
+    return data;
+  }
+
+  function setFormData(data) {
+    document.querySelectorAll("input, textarea, select").forEach(field => {
+      const key = field.name || field.id;
+      if (!key) return;
+
+      if (field.type === "checkbox") {
+        field.checked = !!data[key];
+      } else if (data[key] !== undefined) {
+        field.value = data[key];
+      }
+    });
+    updateProgress();
+  }
+
+  function saveForm(showAlert = true) {
+    localStorage.setItem("rivertownMallHuntData", JSON.stringify(getFormData()));
+    if (showAlert) alert("Progress saved on this device.");
+  }
+
+  function clearForm() {
+    if (!confirm("Clear all entries saved on this device?")) return;
+
+    localStorage.removeItem("rivertownMallHuntData");
+
+    document.querySelectorAll("input, textarea, select").forEach(field => {
+      if (field.type === "checkbox") field.checked = false;
+      else field.value = "";
+    });
+
+    updateProgress();
+  }
+
+  const saved = localStorage.getItem("rivertownMallHuntData");
+  if (saved) setFormData(JSON.parse(saved));
+
+  updateProgress();
+</script>
+
+</body>
+</html>
