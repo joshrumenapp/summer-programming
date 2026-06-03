@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aman Park Explorer Hike</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --accent: #2563eb;
+      --danger: #b91c1c;
+      --success: #166534;
+      --scout-bg: #ecfdf5;
+      --explorer-bg: #eef2ff;
+      --adventurer-bg: #fef3c7;
+      --bonus-bg: #fff7ed;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    header {
+      background: var(--card);
+      padding: 18px 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    h1 { margin: 0 0 6px; font-size: 1.45rem; }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .card, .top-controls, .student-info, .level-card, .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .direction-button {
+      display: block;
+      min-height: 46px;
+      border-radius: 12px;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 10px 12px;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    button, .back-link {
+      min-height: 46px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 10px 12px;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+    }
+
+    .complete-button { background: var(--success); }
+    button.secondary { background: #374151; }
+    button.danger, .back-link { background: var(--danger); }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin: 12px 0 5px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    textarea { min-height: 100px; resize: vertical; }
+
+    .section-title {
+      font-size: 1.25rem;
+      margin: 0 0 8px;
+    }
+
+    .level-card.scout { background: var(--scout-bg); }
+    .level-card.explorer { background: var(--explorer-bg); }
+    .level-card.adventurer { background: var(--adventurer-bg); }
+    .level-card.bonus { background: var(--bonus-bg); }
+
+    .task {
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .task-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .task-label input {
+      width: 24px;
+      min-height: 24px;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    .response-box {
+      margin-top: 8px;
+      padding-left: 34px;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .summary-card { border: 2px solid var(--accent); }
+
+    .summary-line {
+      font-size: 1.15rem;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+
+    .earned {
+      color: var(--success);
+      font-size: 1.25rem;
+    }
+
+    .bonus-earned {
+      color: #c2410c;
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 100;
+      padding: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .celebration-modal {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+      border: 3px solid var(--accent);
+    }
+
+    .celebration-modal h2 {
+      margin: 0 0 10px;
+      font-size: 1.8rem;
+    }
+
+    .celebration-level {
+      font-size: 1.35rem;
+      font-weight: bold;
+      color: var(--success);
+      margin: 14px 0;
+    }
+
+    .modal-actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    footer {
+      padding: 24px 16px 48px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media print {
+      header, .top-controls, footer, .back-link { display: none; }
+      body { background: white; }
+      main { max-width: none; padding: 0; }
+      .card, .student-info, .level-card, .summary-card {
+        box-shadow: none;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>Aman Park Explorer Hike</h1>
+  <p class="subtitle">Forest trails, creek observation, bridge navigation, and outdoor independence skills.</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2 class="section-title">Location Information</h2>
+
+    <p>
+      Aman Park<br>
+      1859 Lake Michigan Dr NW<br>
+      Grand Rapids, MI 49534
+    </p>
+
+    <a class="direction-button"
+       href="https://www.google.com/maps/search/?api=1&query=1859+Lake+Michigan+Dr+NW+Grand+Rapids+MI+49534"
+       target="_blank">
+       Directions
+    </a>
+  </section>
+
+  <section class="top-controls">
+    <div class="button-row">
+      <button onclick="saveForm()">Save Progress</button>
+      <button class="complete-button" onclick="completeHike()">Complete Hike</button>
+    </div>
+    <div class="button-row">
+      <button class="secondary" onclick="window.print()">Print / PDF</button>
+      <button class="danger" onclick="clearForm()">Clear This Device</button>
+    </div>
+    <a class="back-link" href="../nature-walks.html">Back to Nature Walks</a>
+  </section>
+
+  <section class="student-info">
+    <h2 class="section-title">Group Info</h2>
+
+    <label>Group / Student Name</label>
+    <input name="groupName" type="text">
+
+    <label>Date</label>
+    <input name="date" type="date">
+
+    <label>Staff Initials</label>
+    <input name="staff" type="text">
+
+    <label>Choose Your Goal</label>
+    <select name="goal">
+      <option value="">Choose one</option>
+      <option value="scout">Scout - 1 to 5 tasks</option>
+      <option value="explorer">Explorer - 6 to 9 tasks</option>
+      <option value="adventurer">Adventurer - 10 to 14 tasks</option>
+      <option value="trailblazer">Trailblazer - 15+ tasks</option>
+    </select>
+  </section>
+
+  <section class="summary-card">
+    <h2 class="section-title">Progress</h2>
+    <div class="summary-line">Tasks Completed: <span id="completedCount">0</span></div>
+    <div class="summary-line earned">Current Achievement: <span id="earnedLevel">Keep Exploring!</span></div>
+    <div class="bonus-earned">Trail Steward: <span id="trailStewardStatus">Not yet earned</span></div>
+  </section>
+
+  <section class="level-card scout">
+    <h2>🌱 Scout</h2>
+    <p>Complete 1–5 tasks.</p>
+
+    <div class="task"><label class="task-label"><input type="checkbox" name="trailMap" onchange="updateProgress()"> Find a trail map or park sign</label></div>
+    <div class="task"><label class="task-label"><input type="checkbox" name="trailMarker" onchange="updateProgress()"> Find a trail marker</label></div>
+    <div class="task"><label class="task-label"><input type="checkbox" name="bridge" onchange="updateProgress()"> Find a bridge</label></div>
+    <div class="task"><label class="task-label"><input type="checkbox" name="creek" onchange="updateProgress()"> Find the creek</label></div>
+    <div class="task"><label class="task-label"><input type="checkbox" name="fallenTree" onchange="updateProgress()"> Find a fallen tree or large fallen branch</label></div>
+    <div class="task"><label class="task-label"><input type="checkbox" name="bird" onchange="updateProgress()"> Find a bird</label></div>
+    <div class="task"><label class="task-label"><input type="checkbox" name="mushroom" onchange="updateProgress()"> Find a mushroom or fungus</label></div>
+    <div class="task"><label class="task-label"><input type="checkbox" name="wildflower" onchange="updateProgress()"> Find a wildflower or flowering plant</label></div>
+    <div class="task"><label class="task-label"><input type="checkbox" name="restSpot" onchange="updateProgress()"> Find a safe place to stop and rest</label></div>
+    <div class="task"><label class="task-label"><input type="checkbox" name="hillTrail" onchange="updateProgress()"> Find a trail that goes uphill or downhill</label></div>
+  </section>
+
+  <section class="level-card explorer">
+    <h2>🌿 Explorer</h2>
+    <p>Complete 6–9 tasks.</p>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="creekObservation" onchange="updateProgress()"> Observe the creek</label>
+      <div class="response-box"><label>What did you notice?</label><input name="creekNotice" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="threePlants" onchange="updateProgress()"> Find three different plants</label>
+      <div class="response-box">
+        <label>Plant 1</label><input name="plant1" type="text">
+        <label>Plant 2</label><input name="plant2" type="text">
+        <label>Plant 3</label><input name="plant3" type="text">
+      </div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="animalEvidence" onchange="updateProgress()"> Find evidence that animals have been nearby</label>
+      <div class="response-box"><label>What did you find?</label><input name="animalEvidenceFound" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="exposedRoots" onchange="updateProgress()"> Find exposed tree roots</label>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="smoothObject" onchange="updateProgress()"> Find something smooth in nature</label>
+      <div class="response-box"><label>What was it?</label><input name="smoothFound" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="roughObject" onchange="updateProgress()"> Find something rough in nature</label>
+      <div class="response-box"><label>What was it?</label><input name="roughFound" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="animalShelter" onchange="updateProgress()"> Find something that could shelter wildlife</label>
+      <div class="response-box"><label>What did you find?</label><input name="animalShelterFound" type="text"></div>
+    </div>
+
+    <div class="task"><label class="task-label"><input type="checkbox" name="trailIntersection" onchange="updateProgress()"> Find a trail intersection</label></div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="maintenanceEvidence" onchange="updateProgress()"> Find evidence that people help maintain the trail</label>
+      <div class="response-box"><label>What did you find?</label><input name="maintenanceFound" type="text"></div>
+    </div>
+  </section>
+
+  <section class="level-card adventurer">
+    <h2>🌳 Adventurer</h2>
+    <p>Complete 10–14 tasks.</p>
+
+    <div class="task"><label class="task-label"><input type="checkbox" name="leadToBridge" onchange="updateProgress()"> Lead the group to a bridge</label></div>
+    <div class="task"><label class="task-label"><input type="checkbox" name="leadToCreek" onchange="updateProgress()"> Lead the group to a safe creek viewing spot</label></div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="twoTrailSafetyRules" onchange="updateProgress()"> Identify two trail safety rules</label>
+      <div class="response-box mini-grid">
+        <div><label>Rule 1</label><input name="safetyRule1" type="text"></div>
+        <div><label>Rule 2</label><input name="safetyRule2" type="text"></div>
+      </div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="fiveNaturalObjects" onchange="updateProgress()"> Find five natural objects</label>
+      <div class="response-box">
+        <label>Object 1</label><input name="naturalObject1" type="text">
+        <label>Object 2</label><input name="naturalObject2" type="text">
+        <label>Object 3</label><input name="naturalObject3" type="text">
+        <label>Object 4</label><input name="naturalObject4" type="text">
+        <label>Object 5</label><input name="naturalObject5" type="text">
+      </div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="compareTrails" onchange="updateProgress()"> Compare two different parts of the trail</label>
+      <div class="response-box">
+        <label>Trail Area 1</label><input name="trailArea1" type="text">
+        <label>Trail Area 2</label><input name="trailArea2" type="text">
+        <label>How are they different?</label><input name="trailDifference" type="text">
+      </div>
+    </div>
+
+    <div class="task"><label class="task-label"><input type="checkbox" name="safeStepOff" onchange="updateProgress()"> Find a safe place to step aside if another group passes</label></div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="helpStudent" onchange="updateProgress()"> Help another student complete a task</label>
+      <div class="response-box"><label>What did you help with?</label><input name="helpStudentTask" type="text"></div>
+    </div>
+
+    <div class="task"><label class="task-label"><input type="checkbox" name="returnTrailhead" onchange="updateProgress()"> Show staff how you would return to the trailhead</label></div>
+    <div class="task"><label class="task-label"><input type="checkbox" name="quietPlace" onchange="updateProgress()"> Find the quietest place on the trail</label></div>
+  </section>
+
+  <section class="level-card bonus">
+    <h2>🌟 Trail Steward Bonus</h2>
+    <p>Bonus tasks do not count toward your total, but they can earn the Trail Steward achievement.</p>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="trailStewardBonus" onchange="updateProgress()"> Pick up 5 pieces of garbage you see during the hike</label>
+      <div class="response-box">
+        <label>What did you collect?</label>
+        <input name="trailStewardItems" type="text">
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="section-title">Finish Line</h2>
+
+    <label>Favorite thing I saw today</label>
+    <input name="favoriteThing" type="text">
+
+    <label>Something new I learned</label>
+    <input name="newLearned" type="text">
+
+    <label>Favorite part of Aman Park</label>
+    <input name="favoritePart" type="text">
+
+    <label>One safe choice I made</label>
+    <input name="safeChoice" type="text">
+
+    <label>One way I helped the group</label>
+    <input name="helpedGroup" type="text">
+
+    <label>Staff Notes</label>
+    <textarea name="staffNotes" placeholder="Prompting needed, communication observed, navigation, safety skills, regulation, peer interaction, etc."></textarea>
+  </section>
+</main>
+
+<div id="celebrationModal" class="modal-overlay">
+  <div class="celebration-modal">
+    <h2>🎉 CONGRATULATIONS! 🎉</h2>
+    <p>You achieved</p>
+    <div id="modalLevel" class="celebration-level">Keep Exploring!</div>
+    <p>for completing <span id="modalCount">0</span> tasks.</p>
+    <p id="modalBonus"></p>
+    <div class="modal-actions">
+      <button onclick="closeCelebration()">Keep Exploring</button>
+      <button class="secondary" onclick="window.print()">Print / PDF</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Progress saves only on this device/browser.
+</footer>
+
+<script>
+  function getCompletedCount() {
+    const taskCheckboxes = document.querySelectorAll('.level-card:not(.bonus) .task input[type="checkbox"]');
+    let count = 0;
+    taskCheckboxes.forEach(box => { if (box.checked) count++; });
+    return count;
+  }
+
+  function isTrailStewardEarned() {
+    const box = document.querySelector('input[name="trailStewardBonus"]');
+    return box && box.checked;
+  }
+
+  function getEarnedLevel(count) {
+    if (count >= 15) return "🏆 Trailblazer";
+    if (count >= 10) return "🌳 Adventurer";
+    if (count >= 6) return "🌿 Explorer";
+    if (count >= 1) return "🌱 Scout";
+    return "Keep Exploring!";
+  }
+
+  function updateProgress() {
+    const count = getCompletedCount();
+    const level = getEarnedLevel(count);
+    const trailSteward = isTrailStewardEarned();
+
+    document.getElementById('completedCount').textContent = count;
+    document.getElementById('earnedLevel').textContent = level;
+    document.getElementById('trailStewardStatus').textContent = trailSteward ? "🌟 Earned" : "Not yet earned";
+  }
+
+  function completeHike() {
+    const count = getCompletedCount();
+    const level = getEarnedLevel(count);
+    const trailSteward = isTrailStewardEarned();
+
+    saveForm(false);
+
+    document.getElementById('modalCount').textContent = count;
+    document.getElementById('modalLevel').textContent = level;
+    document.getElementById('modalBonus').textContent = trailSteward ? "🌟 Trail Steward Bonus Earned!" : "";
+    document.getElementById('celebrationModal').classList.add('show');
+  }
+
+  function closeCelebration() {
+    document.getElementById('celebrationModal').classList.remove('show');
+  }
+
+  function getFormData() {
+    const data = {};
+    document.querySelectorAll("input, textarea, select").forEach(field => {
+      const key = field.name || field.id;
+      if (!key) return;
+      data[key] = field.type === "checkbox" ? field.checked : field.value;
+    });
+    return data;
+  }
+
+  function setFormData(data) {
+    document.querySelectorAll("input, textarea, select").forEach(field => {
+      const key = field.name || field.id;
+      if (!key) return;
+      if (field.type === "checkbox") field.checked = !!data[key];
+      else if (data[key] !== undefined) field.value = data[key];
+    });
+    updateProgress();
+  }
+
+  function saveForm(showAlert = true) {
+    localStorage.setItem("amanParkExplorerHikeData", JSON.stringify(getFormData()));
+    if (showAlert) alert("Progress saved on this device.");
+  }
+
+  function clearForm() {
+    if (!confirm("Clear all entries saved on this device?")) return;
+
+    localStorage.removeItem("amanParkExplorerHikeData");
+
+    document.querySelectorAll("input, textarea, select").forEach(field => {
+      if (field.type === "checkbox") field.checked = false;
+      else field.value = "";
+    });
+
+    updateProgress();
+  }
+
+  const saved = localStorage.getItem("amanParkExplorerHikeData");
+  if (saved) setFormData(JSON.parse(saved));
+
+  updateProgress();
+</script>
+
+</body>
+</html>
