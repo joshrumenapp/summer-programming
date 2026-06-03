@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tanger Outlet Explorer Hunt</title>
+  <title>Tanger Outlets Hunt</title>
   <style>
     :root {
       --bg: #f6f7f9;
@@ -12,12 +12,11 @@
       --muted: #6b7280;
       --border: #d1d5db;
       --accent: #2563eb;
-      --accent-dark: #1d4ed8;
       --danger: #b91c1c;
       --success: #166534;
-      --gold-bg: #fef3c7;
-      --silver-bg: #f3f4f6;
-      --bronze-bg: #ffedd5;
+      --scout-bg: #ecfdf5;
+      --explorer-bg: #eef2ff;
+      --adventurer-bg: #fef3c7;
     }
 
     * { box-sizing: border-box; }
@@ -29,19 +28,6 @@
       color: var(--text);
       line-height: 1.4;
     }
-
-.direction-button {
-  display: block;
-  min-height: 46px;
-  border-radius: 12px;
-  background: #2563eb;
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
-  padding: 10px 12px;
-  text-align: center;
-  text-decoration: none;
-}
 
     header {
       background: var(--card);
@@ -78,15 +64,24 @@
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
-    .top-controls {
-      display: grid;
-      gap: 10px;
-    }
-
     .button-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .direction-button {
+      display: block;
+      min-height: 46px;
+      border-radius: 12px;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 10px 12px;
+      text-align: center;
+      text-decoration: none;
     }
 
     button, .back-link {
@@ -101,15 +96,12 @@
       text-align: center;
       text-decoration: none;
       display: block;
+      width: 100%;
     }
 
-    button.secondary, .back-link.secondary {
-      background: #374151;
-    }
-
-    button.danger {
-      background: var(--danger);
-    }
+    .complete-button { background: var(--success); }
+    button.secondary { background: #374151; }
+    button.danger, .back-link { background: var(--danger); }
 
     label {
       display: block;
@@ -137,19 +129,9 @@
       margin: 0 0 8px;
     }
 
-    .level-card.scout { background: var(--bronze-bg); }
-    .level-card.explorer { background: var(--silver-bg); }
-    .level-card.adventuerer { background: var(--gold-bg); }
-
-    .level-card h2 {
-      margin: 0 0 8px;
-      font-size: 1.2rem;
-    }
-
-    .level-card p, .card p {
-      color: var(--muted);
-      margin-top: 0;
-    }
+    .level-card.scout { background: var(--scout-bg); }
+    .level-card.explorer { background: var(--explorer-bg); }
+    .level-card.adventurer { background: var(--adventurer-bg); }
 
     .task {
       padding: 12px 0;
@@ -176,10 +158,10 @@
       padding-left: 34px;
     }
 
-    .response-box label {
-      margin-top: 0;
-      font-weight: normal;
-      color: var(--muted);
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
     }
 
     .summary-card {
@@ -197,33 +179,6 @@
       font-size: 1.25rem;
     }
 
-    .completion-grid {
-      display: grid;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .completion-grid label {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px;
-      margin: 0;
-      background: white;
-    }
-
-    .completion-grid input {
-      width: 24px;
-      min-height: 24px;
-    }
-
-
-    .complete-button {
-      background: var(--success);
-    }
-
     .modal-overlay {
       display: none;
       position: fixed;
@@ -235,9 +190,7 @@
       justify-content: center;
     }
 
-    .modal-overlay.show {
-      display: flex;
-    }
+    .modal-overlay.show { display: flex; }
 
     .celebration-modal {
       width: 100%;
@@ -253,12 +206,6 @@
     .celebration-modal h2 {
       margin: 0 0 10px;
       font-size: 1.8rem;
-    }
-
-    .celebration-modal p {
-      font-size: 1.1rem;
-      color: var(--text);
-      margin: 8px 0;
     }
 
     .celebration-level {
@@ -285,23 +232,26 @@
       header, .top-controls, footer, .back-link { display: none; }
       body { background: white; }
       main { max-width: none; padding: 0; }
-      .card, .student-info, .level-card, .summary-card { box-shadow: none; page-break-inside: avoid; }
+      .card, .student-info, .level-card, .summary-card {
+        box-shadow: none;
+        page-break-inside: avoid;
+      }
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1>Tanger Outlets Explorer Hunt</h1>
-    <p class="subtitle">A kid-friendly community navigation, safety, and discovery activity.</p>
-  </header>
+<header>
+  <h1>Tanger Outlets Hunt</h1>
+  <p class="subtitle">Community navigation, safety awareness, observation, and independence skills.</p>
+</header>
 
-<section class="card">
+<main>
+  <section class="card">
     <h2 class="section-title">Location Information</h2>
-
     <p>
       Tanger Outlets<br>
-      350 284th St SW<br>
+      350 84th St SW<br>
       Byron Center, MI 49315
     </p>
 
@@ -310,4 +260,326 @@
        target="_blank">
        Directions
     </a>
-</section>
+  </section>
+
+  <section class="top-controls">
+    <div class="button-row">
+      <button onclick="saveForm()">Save Progress</button>
+      <button class="complete-button" onclick="completeHunt()">Complete Hunt</button>
+    </div>
+    <div class="button-row">
+      <button class="secondary" onclick="window.print()">Print / PDF</button>
+      <button class="danger" onclick="clearForm()">Clear This Device</button>
+    </div>
+    <a class="back-link" href="../mallhunts.html">Back to Mall Hunts</a>
+  </section>
+
+  <section class="student-info">
+    <h2 class="section-title">Group Info</h2>
+
+    <label>Group / Student Name</label>
+    <input name="groupName" type="text">
+
+    <label>Date</label>
+    <input name="date" type="date">
+
+    <label>Staff Initials</label>
+    <input name="staff" type="text">
+
+    <label>Choose Your Goal</label>
+    <select name="goal">
+      <option value="">Choose one</option>
+      <option value="scout">Scout - 1 to 5 tasks</option>
+      <option value="explorer">Explorer - 6 to 9 tasks</option>
+      <option value="adventurer">Adventurer - 10 to 14 tasks</option>
+      <option value="trailblazer">Trailblazer - 15+ tasks</option>
+    </select>
+  </section>
+
+  <section class="summary-card">
+    <h2 class="section-title">Progress</h2>
+    <div class="summary-line">Tasks Completed: <span id="completedCount">0</span></div>
+    <div class="summary-line earned">Current Achievement: <span id="earnedLevel">Keep Exploring!</span></div>
+  </section>
+
+  <section class="level-card scout">
+    <h2>🌱 Scout</h2>
+    <p>Complete 1–5 tasks.</p>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="mallMap" onchange="updateProgress()"> Find the outlet map or directory</label>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="restroom" onchange="updateProgress()"> Find a restroom</label>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="shoeStore" onchange="updateProgress()"> Find a shoe store</label>
+      <div class="response-box"><label>Store Name</label><input name="shoeStoreName" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="clothingStore" onchange="updateProgress()"> Find a clothing store</label>
+      <div class="response-box"><label>Store Name</label><input name="clothingStoreName" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="saleSign" onchange="updateProgress()"> Find a sale sign</label>
+      <div class="response-box"><label>Store</label><input name="saleStore" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="bench" onchange="updateProgress()"> Find a bench or seating area</label>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="trashCan" onchange="updateProgress()"> Find a trash can</label>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="snackLocation" onchange="updateProgress()"> Find a food or snack location</label>
+      <div class="response-box"><label>Location Name</label><input name="snackLocationName" type="text"></div>
+    </div>
+  </section>
+
+  <section class="level-card explorer">
+    <h2>🌿 Explorer</h2>
+    <p>Complete 6–9 tasks.</p>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="threeClothingStores" onchange="updateProgress()"> Find three different clothing stores</label>
+      <div class="response-box">
+        <label>Store 1</label><input name="clothing1" type="text">
+        <label>Store 2</label><input name="clothing2" type="text">
+        <label>Store 3</label><input name="clothing3" type="text">
+      </div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="sportsStore" onchange="updateProgress()"> Find a store that sells sports items</label>
+      <div class="response-box"><label>Store Name</label><input name="sportsStoreName" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="homeStore" onchange="updateProgress()"> Find a store that sells kitchen or home items</label>
+      <div class="response-box"><label>Store Name</label><input name="homeStoreName" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="newStore" onchange="updateProgress()"> Find a store you have never visited before</label>
+      <div class="response-box"><label>Store Name</label><input name="newStoreName" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="musicStore" onchange="updateProgress()"> Find a store with music playing</label>
+      <div class="response-box"><label>Store Name</label><input name="musicStoreName" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="mannequins" onchange="updateProgress()"> Find a store with mannequins in the window</label>
+      <div class="response-box"><label>Store Name</label><input name="mannequinStore" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="nameTag" onchange="updateProgress()"> Find a store employee wearing a name tag</label>
+      <div class="response-box"><label>Store Name</label><input name="nameTagStore" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="clearance" onchange="updateProgress()"> Find a store with a clearance section</label>
+      <div class="response-box"><label>Store Name</label><input name="clearanceStore" type="text"></div>
+    </div>
+  </section>
+
+  <section class="level-card adventurer">
+    <h2>🌳 Adventurer</h2>
+    <p>Complete 10–14 tasks.</p>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="differentLetters" onchange="updateProgress()"> Find five stores that start with different letters</label>
+      <div class="response-box">
+        <label>Store 1</label><input name="letterStore1" type="text">
+        <label>Store 2</label><input name="letterStore2" type="text">
+        <label>Store 3</label><input name="letterStore3" type="text">
+        <label>Store 4</label><input name="letterStore4" type="text">
+        <label>Store 5</label><input name="letterStore5" type="text">
+      </div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="kidsItems" onchange="updateProgress()"> Find a store that sells items for children</label>
+      <div class="response-box"><label>Store Name</label><input name="kidsStore" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="adultItems" onchange="updateProgress()"> Find a store that sells items for adults</label>
+      <div class="response-box"><label>Store Name</label><input name="adultStore" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="wantToBuy" onchange="updateProgress()"> Find something you would like to buy</label>
+      <div class="response-box mini-grid">
+        <div><label>Item</label><input name="wantedItem" type="text"></div>
+        <div><label>Store</label><input name="wantedStore" type="text"></div>
+      </div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="under10" onchange="updateProgress()"> Find something that costs less than $10</label>
+      <div class="response-box mini-grid">
+        <div><label>Item</label><input name="under10Item" type="text"></div>
+        <div><label>Price</label><input name="under10Price" type="text"></div>
+      </div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="over50" onchange="updateProgress()"> Find something that costs more than $50</label>
+      <div class="response-box mini-grid">
+        <div><label>Item</label><input name="over50Item" type="text"></div>
+        <div><label>Price</label><input name="over50Price" type="text"></div>
+      </div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="outdoorItems" onchange="updateProgress()"> Find a store that sells outdoor items</label>
+      <div class="response-box"><label>Store Name</label><input name="outdoorStore" type="text"></div>
+    </div>
+
+    <div class="task">
+      <label class="task-label"><input type="checkbox" name="safeMeetingPlace" onchange="updateProgress()"> Find a safe meeting place if the group gets separated</label>
+      <div class="response-box"><label>Location</label><input name="safeMeetingPlaceLocation" type="text"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="section-title">Finish Line</h2>
+
+    <label>Favorite store today</label>
+    <input name="favoriteStore" type="text">
+
+    <label>Favorite item seen</label>
+    <input name="favoriteItem" type="text">
+
+    <label>One safe choice made today</label>
+    <input name="safeChoice" type="text">
+
+    <label>Staff Notes</label>
+    <textarea name="staffNotes" placeholder="Prompting needed, communication observed, navigation, safety skills, regulation, peer interaction, etc."></textarea>
+  </section>
+</main>
+
+<div id="celebrationModal" class="modal-overlay">
+  <div class="celebration-modal">
+    <h2>🎉 CONGRATULATIONS! 🎉</h2>
+    <p>You achieved</p>
+    <div id="modalLevel" class="celebration-level">Keep Exploring!</div>
+    <p>for completing <span id="modalCount">0</span> tasks.</p>
+    <div class="modal-actions">
+      <button onclick="closeCelebration()">Keep Exploring</button>
+      <button class="secondary" onclick="window.print()">Print / PDF</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Progress saves only on this device/browser.
+</footer>
+
+<script>
+  function getCompletedCount() {
+    const taskCheckboxes = document.querySelectorAll('.task input[type="checkbox"]');
+    let count = 0;
+
+    taskCheckboxes.forEach(box => {
+      if (box.checked) count++;
+    });
+
+    return count;
+  }
+
+  function getEarnedLevel(count) {
+    if (count >= 15) return "🏆 Outlet Hunt Trailblazer";
+    if (count >= 10) return "🌳 Outlet Hunt Adventurer";
+    if (count >= 6) return "🌿 Outlet Hunt Explorer";
+    if (count >= 1) return "🌱 Outlet Hunt Scout";
+    return "Keep Exploring!";
+  }
+
+  function updateProgress() {
+    const count = getCompletedCount();
+    const level = getEarnedLevel(count);
+
+    document.getElementById('completedCount').textContent = count;
+    document.getElementById('earnedLevel').textContent = level;
+  }
+
+  function completeHunt() {
+    const count = getCompletedCount();
+    const level = getEarnedLevel(count);
+
+    saveForm(false);
+
+    document.getElementById('modalCount').textContent = count;
+    document.getElementById('modalLevel').textContent = level;
+    document.getElementById('celebrationModal').classList.add('show');
+  }
+
+  function closeCelebration() {
+    document.getElementById('celebrationModal').classList.remove('show');
+  }
+
+  function getFormData() {
+    const data = {};
+    document.querySelectorAll("input, textarea, select").forEach(field => {
+      const key = field.name || field.id;
+      if (!key) return;
+
+      if (field.type === "checkbox") {
+        data[key] = field.checked;
+      } else {
+        data[key] = field.value;
+      }
+    });
+    return data;
+  }
+
+  function setFormData(data) {
+    document.querySelectorAll("input, textarea, select").forEach(field => {
+      const key = field.name || field.id;
+      if (!key) return;
+
+      if (field.type === "checkbox") {
+        field.checked = !!data[key];
+      } else if (data[key] !== undefined) {
+        field.value = data[key];
+      }
+    });
+    updateProgress();
+  }
+
+  function saveForm(showAlert = true) {
+    localStorage.setItem("tangerOutletsHuntData", JSON.stringify(getFormData()));
+    if (showAlert) alert("Progress saved on this device.");
+  }
+
+  function clearForm() {
+    if (!confirm("Clear all entries saved on this device?")) return;
+
+    localStorage.removeItem("tangerOutletsHuntData");
+
+    document.querySelectorAll("input, textarea, select").forEach(field => {
+      if (field.type === "checkbox") field.checked = false;
+      else field.value = "";
+    });
+
+    updateProgress();
+  }
+
+  const saved = localStorage.getItem("tangerOutletsHuntData");
+  if (saved) setFormData(JSON.parse(saved));
+
+  updateProgress();
+</script>
+</body>
+</html>
