@@ -197,6 +197,18 @@
       .card, .student-info { box-shadow: none; page-break-inside: avoid; }
       button { display: none; }
     }
+
+    .back-button {
+    display: block;
+    padding: 14px;
+    background: #dc2626;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: bold;
+}
+    
   </style>
 </head>
 <body>
@@ -396,5 +408,8 @@
     const saved = localStorage.getItem("groceryScavengerHuntData");
     if (saved) setFormData(JSON.parse(saved));
   </script>
+
+  <a class="back-button" href="index.html">Back to Home</a>
+  
 </body>
 </html>
